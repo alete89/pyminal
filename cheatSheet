@@ -1,0 +1,1 @@
+-R will reset the terminal before sending the keys. This is useful if you don’t want to keep your focus on the output of the last command.
