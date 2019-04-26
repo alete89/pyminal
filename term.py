@@ -5,6 +5,12 @@ import sys
 from PyQt4.QtCore import QProcess
 from PyQt4.QtGui import QWidget, QVBoxLayout, QPushButton, QApplication, QLineEdit
 
+# Compruebo que tenga tmux
+import distutils.spawn
+
+if not distutils.spawn.find_executable("tmux"):
+    raise Warning("tmux no está instalado!")
+
 
 class embeddedTerminal(QWidget):
 
@@ -26,7 +32,8 @@ class embeddedTerminal(QWidget):
         layout.addWidget(self.textBox)
         layout.addWidget(self.button)
         self.textBox.setFocus()
-        self.button.clicked.connect(lambda ignore: self.run_command(self.textBox.text()))
+        self.button.clicked.connect(
+            lambda ignore: self.run_command(self.textBox.text()))
         self.button.setAutoDefault(True)
 
     def _start_process(self, prog, args):
@@ -35,7 +42,8 @@ class embeddedTerminal(QWidget):
         child.start(prog, args)
 
     def run_command(self, command):
-        self._start_process('tmux', ['send-keys', '-t', 'ale:0', command, 'Enter'])
+        self._start_process(
+            'tmux', ['send-keys', '-t', 'ale:0', command, 'Enter'])
         self.textBox.clear()
 
     def closeEvent(self, event):
