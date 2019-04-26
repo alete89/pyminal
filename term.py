@@ -23,6 +23,7 @@ class embeddedTerminal(QWidget):
         self.button = QPushButton('run-in-terminal')
         layout.addWidget(self.textBox)
         layout.addWidget(self.button)
+        self.textBox.setFocus()
         self.button.clicked.connect(lambda ignore: self.run_command(self.textBox.text()))
 
     def _start_process(self, prog, args):
