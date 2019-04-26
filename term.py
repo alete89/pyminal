@@ -15,6 +15,7 @@ class embeddedTerminal(QWidget):
         self.terminal = QWidget(self)
         layout = QVBoxLayout(self)
         layout.addWidget(self.terminal)
+        self.kill_tmux()
         self._start_process('xterm',
                             ['-geometry', '640x480+0+0', '-into', str(self.terminal.winId()), '-e',
                              'tmux', 'new', '-s', 'ale']
@@ -42,7 +43,7 @@ class embeddedTerminal(QWidget):
         event.accept()
 
     def kill_tmux(self):
-        self._start_process('tmux', ['kill-session', '-t', 'ale'])
+        self._start_process('tmux', ['kill-server'])
 
 
 if __name__ == "__main__":
