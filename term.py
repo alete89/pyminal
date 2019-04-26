@@ -23,7 +23,7 @@ class embeddedTerminal(QWidget):
         self.button = QPushButton('run-in-terminal')
         layout.addWidget(self.textBox)
         layout.addWidget(self.button)
-        self.button.clicked.connect(lambda ignore: self.run_command(self.textBox.text))
+        self.button.clicked.connect(lambda ignore: self.run_command(self.textBox.text()))
 
     def _start_process(self, prog, args):
         child = QProcess()
@@ -31,7 +31,6 @@ class embeddedTerminal(QWidget):
         child.start(prog, args)
 
     def run_command(self, command):
-        command = self.textBox.text()
         self._start_process('tmux', ['send-keys', '-t', 'ale:0', command, 'Enter'])
 
     def closeEvent(self, event):
