@@ -17,15 +17,22 @@ class embeddedTerminal(QWidget):
     def __init__(self):
         QWidget.__init__(self)
         self._processes = []
+        self.banned_words = ['exit', 'prohibido']
         self.resize(800, 600)
         self.terminal = QWidget(self)
         layout = QVBoxLayout(self)
         layout.addWidget(self.terminal)
         self.kill_tmux()
-        self._start_process('xterm',
-                            ['-geometry', '640x480+0+0', '-into', str(self.terminal.winId()), '-e',
-                             'tmux', 'new', '-s', 'ale']
-                            )
+        
+        # self._start_process('tmux', ['new', '-s', 'npy'])
+        # self._start_process('tmux', ['detach-client', '-s', 'npy'])
+
+        # self._start_process('xterm',
+        #                     ['-geometry', '640x480+0+0', '-into', str(self.terminal.winId()),
+        #                      '-e', 'tmux', 'new', '-s', 'npy'])
+
+        self._start_process('xterm', ['-fa', 'Monospace', '-fs', '14', '-geometry', '640x480+0+0', '-into', str(self.terminal.winId()),
+                            '-e', 'tmux', 'new', '-s', 'npy'])
         self.textBox = QLineEdit(self)
         self.button = QPushButton('run-in-terminal')
         self.textBox.returnPressed.connect(self.button.click)
@@ -33,7 +40,7 @@ class embeddedTerminal(QWidget):
         layout.addWidget(self.button)
         self.textBox.setFocus()
         self.button.clicked.connect(
-            lambda ignore: self.run_command(self.textBox.text()))
+            lambda: self.run_command(self.textBox.text()))
         self.button.setAutoDefault(True)
 
     def _start_process(self, prog, args):
@@ -42,8 +49,9 @@ class embeddedTerminal(QWidget):
         child.start(prog, args)
 
     def run_command(self, command):
-        self._start_process(
-            'tmux', ['send-keys', '-t', 'ale:0', command, 'Enter'])
+        if command not in self.banned_words:
+            self._start_process(
+                'tmux', ['send-keys', '-t', 'npy:0', command, 'Enter'])
         self.textBox.clear()
 
     def closeEvent(self, event):
@@ -59,3 +67,8 @@ if __name__ == "__main__":
     main = embeddedTerminal()
     main.show()
     sys.exit(app.exec_())
+
+
+# para tmux
+# archivo en /home/usuario/tmux.conf
+# set-option -g mouse on
