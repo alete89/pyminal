@@ -32,6 +32,7 @@ class embeddedTerminal(QWidget):
 
     def run_command(self, command):
         self._start_process('tmux', ['send-keys', '-t', 'ale:0', command, 'Enter'])
+        self.textBox.clear()
 
     def closeEvent(self, event):
         self.kill_tmux()
